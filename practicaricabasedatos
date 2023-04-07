@@ -1,0 +1,46 @@
+import tkinter as tk
+import mysql.connector
+from tkinter import ttk
+
+bd = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="",
+    database="derecho"
+)
+
+mi_cursor = bd.cursor()
+mi_cursor.execute("SELECT * from caso")
+resultado = mi_cursor.fetchall()
+
+# crear ventana de Tkinter
+ventana = tk.Tk()
+ventana.title("Lista de caso")
+
+# crear Table
+tabla = ttk.Treeview(ventana)
+tabla['columns'] = ('numero movil', 'Nombre','AP.paterno','AP.materno')
+
+# ajustar las columnas
+tabla.column('#0', width=0, stretch=tk.NO)
+tabla.column('numero movil', anchor=tk.CENTER, width=200)
+tabla.column('Nombre', anchor=tk.CENTER, width=150)
+tabla.column('AP.paterno', anchor=tk.CENTER, width=150)
+tabla.column('AP.materno', anchor=tk.CENTER, width=150)
+
+
+# heading
+tabla.heading('#0', text='', anchor=tk.CENTER)
+tabla.heading('numero movil', text='numero movil', anchor=tk.CENTER)
+tabla.heading('Nombre', text='Nombre', anchor=tk.CENTER)
+tabla.heading('AP.paterno', text='AP.paterno', anchor=tk.CENTER)
+tabla.heading('AP.materno', text='AP.materno', anchor=tk.CENTER)
+
+# agregar datos
+for caso in resultado:
+  tabla.insert(parent='', index='end', iid=caso[0], values=(caso[0],caso[1], caso[2],caso[3]))
+
+# mostrar tabla en ventana
+tabla.pack()
+
+ventana.mainloop()
